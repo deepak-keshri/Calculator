@@ -1,0 +1,259 @@
+<html>
+    <head>
+        <style>
+            body{
+                background-image: radial-gradient( green,red,blue,orange,white);
+            }
+            table
+            {   
+                margin: auto;   
+            }
+            input
+            {
+                height: 40px;
+                width: 40px;
+                font-weight: bold;
+                font-size: 20px;
+            }
+            input[type="button"]{
+                border-radius: 50%;     
+                cursor: pointer;
+                transition-duration: 1s;
+            }
+            input[type="button"]:hover{
+                background-color: aqua;
+            }
+            .sign:hover{
+                background-color: red;
+                border: 3px groove yellow;
+            }
+            
+            #sol
+            {
+                outline: none;
+                height: 30px;
+                width: 250px;
+                text-align: right;   
+                font-size: 25px;  
+                border: none;           
+            }
+            div
+            {
+                border: 2px solid black;
+                outline: 2px solid grey;
+            }
+            #str
+            {
+                outline: none;
+                height: 20px;
+                width: 250px;
+                border: none;
+                font-size: 10px;
+                color: silver;
+                text-align: right;
+            }
+            table{
+                outline: 5px groove rgb(65, 238, 108);
+            }
+        </style>
+    </head>
+    <boyd>
+        <table>
+            <tr>
+                <td colspan="4">
+                    <div>
+                        <input type="text" id="str" name="str" readonly><br>  
+                        <input type="text" id="sol" name="sol" value="0" readonly>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="button" onclick="cal(this)" class="sign" value="%">
+                </td>
+            
+                <td>
+                    <input type="button" onclick="DelSol()" value="CE">
+                </td>
+            
+                <td>
+                    <input type="button" onclick="Cansel()" value="C">
+                </td>
+            
+                <td>
+                    <input type="button" onclick="DelChar()" value="x"><br>
+                </td>
+            <tr>
+                <td>
+                    <input type="button" onclick="cal(this)" value="7">
+                </td>
+            
+                <td>
+                    <input type="button" onclick="cal(this)" value="8">
+                </td>
+            
+                <td>
+                    <input type="button" onclick="cal(this)" value="9">
+                </td>
+            
+                <td>
+                    <input type="button" onclick="cal(this)" class="sign" value="*"><br>
+                </td>
+            <tr>
+                <td>
+                    <input type="button" onclick="cal(this)" value="4">
+                </td>
+            
+                <td>
+                    <input type="button" onclick="cal(this)" value="5">
+                </td>
+            
+                <td>
+                    <input type="button" onclick="cal(this)" value="6">
+                </td>
+            
+                <td>
+                    <input type="button" onclick="cal(this)" class="sign" value="-">
+                </td>
+            <tr>
+                <td>
+                    <input type="button" onclick="cal(this)" value="1">
+                </td>
+            
+                <td>
+                    <input type="button" onclick="cal(this)" value="2">
+                </td>
+            
+                <td>
+                    <input type="button" onclick="cal(this)" value="3">
+                </td>
+            
+                <td>
+                    <input type="button" onclick="cal(this)" class="sign" value="+">
+                </td>
+            <tr>
+                <td>
+                    <input type="button" onclick="cal(this)" class="sign" value="/">
+                </td>
+           
+                <td>
+                    <input type="button" onclick="cal(this)" value="0">
+                </td>
+            
+                <td>
+                    <input type="button" onclick="cal(this)" value=".">
+                </td>
+           
+                <td>
+                    <input type="button" onclick="Equal()" class="sign" value="=">
+                </td>
+            </tr>
+
+        </table>
+    </boyd>
+    <script>
+        let c=0,v=0,des=0;  
+        var strme = "";
+
+        function cal(obj)
+        {
+           var val;
+           val=obj.value;
+           console.log("val : "+val);
+
+           if((val=='+'||val=='-'||val=='*'||val=='/'||val=='%') && v==1)// first is not any operator.
+           {
+                if(c==1)
+                {
+                    c=0,des=0; 
+                    str.value += val;
+                    sol.value=eval(str.value); 
+                }
+                else
+                {
+                    l=str.value.length;
+                    if(l>=1)
+                    {
+                        str.value = str.value.substr(0,l-1);
+                        str.value += val;
+                    }
+                }
+           }
+           else if((val=='.'))
+           {
+               if(des==0)
+               {
+                   des=1;
+                   str.value += val;
+                   sol.value=eval(str.value); 
+               }
+           }
+           else // Only work Number.
+           { 
+               if(val<0 || val>=0 )
+               {
+                   str.value += val;
+                   c=1;
+                   sol.value=eval(str.value); 
+               }
+           }
+           v=1;
+           previous()
+        }
+        /*function Equal()
+        {
+            
+        }*/
+        function Cansel() /* For Pressing C */
+        {
+            str.value="";
+            sol.value=0;
+            c=0,v=0;
+            des=0;
+            previous()
+        }
+
+        function Equal() /* For Pressing = */
+        {          
+            document.getElementById('sol').style.color="blue";
+            document.getElementById('sol').style.fontSize="35px";
+        }
+        function previous()
+        {
+            document.getElementById('sol').style.color="black";
+            document.getElementById('sol').style.fontSize="25px";
+        }
+
+        function DelSol() /* For Pressing CE */
+        {
+            sol.value=eval(0);
+            previous()
+        }
+
+        function DelChar() /* DelChar means Delere_Character For Pressing x */
+        {
+            l = (str.value).length;
+            
+            if(l>0)
+            {
+                if(str.value[l-1]=='.')
+                    des=0;
+                else
+                    des=1;
+
+                str.value = str.value.substr(0,l-1);
+
+                if(str.value[l-2]=='+'||str.value[l-2]=='-'||str.value[l-2]=='*'||str.value[l-2]=='/'||str.value[l-2]=='%')/* for checking Operator. */
+                    c=0;
+                else
+                    c=1;
+                
+                if(l<=1)
+                    sol.value = eval(0),c=0;
+                else
+                    sol.value=eval(str.value);
+            }
+            previous()
+        }
+    </script>
+</html>
